@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rexult Talentportal – Prototyp</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#37366B;--navy-d:#26254E;--navy-l:#EEEDF5;
+  --orange:#F8A82A;--orange-l:#FEF3E2;--orange-d:#D4880A;
+  --cream:#FFF1D3;--purple-l:#AFA6C5;
+  --green:#4A7C59;--green-l:#D6EAD8;
+  --red-l:#FDECEA;--red:#A32D2D;
+  --gray:#B5B6B6;--gray-l:#F5F5F5;--gray-d:#555;
+  --white:#FFFFFF;--border:#E0E0E0;
+  --text:#2D2D2D;--text-s:#666666;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#F0EFF8;color:var(--text);min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:32px;height:32px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--navy)}
+.brand-name{font-size:15px;font-weight:600;color:#fff}
+.brand-sub{font-size:11px;color:var(--purple-l);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-badge{font-size:11px;background:var(--orange-l);color:var(--orange-d);padding:3px 10px;border-radius:20px;font-weight:500}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:24px;padding:5px 12px 5px 5px;cursor:pointer}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--navy)}
+.user-name{font-size:13px;color:#fff}
+
+/* ── NAV ── */
+.nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0;position:sticky;top:56px;z-index:99}
+.nav-item{padding:14px 18px;font-size:13px;color:var(--text-s);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.nav-item:hover{color:var(--navy);background:var(--navy-l)}
+.nav-item.active{color:var(--navy);border-bottom-color:var(--orange);font-weight:600}
+.nav-icon{font-size:16px}
+
+/* ── LAYOUT ── */
+.main{padding:24px;max-width:1200px;margin:0 auto}
+.view{display:none}
+.view.active{display:block}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:600;color:var(--navy)}
+.page-sub{font-size:13px;color:var(--text-s);margin-top:3px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{font-size:13px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:all .15s}
+.btn:hover{background:var(--gray-l)}
+.btn-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-primary:hover{background:var(--navy-d)}
+.btn-orange{background:var(--orange);color:var(--navy);border-color:var(--orange);font-weight:600}
+.btn-orange:hover{background:var(--orange-d)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-s)}
+.btn-ghost:hover{background:var(--gray-l);color:var(--text)}
+
+/* ── STATS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+.stat-label{font-size:12px;color:var(--text-s);margin-bottom:6px;font-weight:500}
+.stat-val{font-size:28px;font-weight:700;color:var(--navy)}
+.stat-note{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:4px}
+.stat-note.ok{color:var(--green)}
+.stat-note.warn{color:var(--orange-d)}
+.progress{height:4px;background:#EEE;border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-fill{height:4px;border-radius:2px;transition:width .5s}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:12px}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.card-title{font-size:15px;font-weight:600;color:var(--text)}
+.card-meta{font-size:12px;color:var(--text-s);margin-top:3px}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.card-body{font-size:13px;color:var(--text-s);line-height:1.6}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;gap:4px}
+.badge-green{background:var(--green-l);color:#27500A}
+.badge-orange{background:var(--orange-l);color:#633806}
+.badge-navy{background:var(--navy-l);color:var(--navy)}
+.badge-red{background:var(--red-l);color:var(--red)}
+.badge-gray{background:var(--gray-l);color:var(--gray-d)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+/* ── FILTER ── */
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-bar input,.filter-bar select{font-size:13px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--text);font-family:inherit}
+.filter-bar input{flex:1;min-width:180px}
+.pill-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.pill{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:var(--white);color:var(--text-s);transition:all .15s}
+.pill.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pill:hover:not(.active){background:var(--gray-l)}
+
+/* ── AKTIVITÄT ── */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.act-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.act-icon.orange{background:var(--orange-l);color:var(--orange-d)}
+.act-icon.green{background:var(--green-l);color:var(--green)}
+.act-icon.navy{background:var(--navy-l);color:var(--navy)}
+.act-text{font-size:13px;color:var(--text);flex:1;line-height:1.5}
+.act-time{font-size:11px;color:var(--text-s);white-space:nowrap}
+
+/* ── KANDIDATEN ── */
+.kandidat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.kandidat-avatar{width:40px;height:40px;border-radius:50%;background:var(--navy-l);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0}
+.kandidat-info{flex:1}
+.kandidat-name{font-size:14px;font-weight:600;color:var(--text)}
+.kandidat-sub{font-size:12px;color:var(--text-s);margin-top:2px}
+.kandidat-skills{font-size:12px;color:var(--text-s);margin-top:3px}
+.kandidat-right{text-align:right;flex-shrink:0}
+.kandidat-ref{font-size:11px;margin-top:4px}
+
+/* ── BEWERBUNGEN ── */
+.bew-group{margin-bottom:20px}
+.bew-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:10px;padding:8px 12px;background:var(--navy-l);border-radius:8px;border-left:3px solid var(--orange)}
+.bew-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:6px}
+.bew-item.top{background:var(--green-l)}
+.bew-item.mid{background:var(--gray-l)}
+.bew-item.low{background:var(--red-l)}
+.bew-name{font-size:14px;font-weight:600;color:var(--text)}
+.bew-details{font-size:12px;color:var(--text-s);margin-top:2px}
+.bew-ek{font-size:11px;margin-top:3px}
+.bew-ek.ok{color:var(--green)}
+.bew-ek.warn{color:var(--orange-d)}
+.bew-ek.fail{color:var(--red)}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:16px;padding:24px;width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:16px;font-weight:600;color:var(--navy)}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text-s);margin-bottom:5px;font-weight:500}
+.form-input{width:100%;font-size:13px;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--white);color:var(--text);font-family:inherit}
+.form-input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(55,54,107,.1)}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.info-box{background:var(--cream);border:1px solid var(--orange-l);border-radius:8px;padding:10px 12px;font-size:12px;color:#633806;margin-bottom:14px;line-height:1.5}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;font-size:13px;padding:12px 18px;border-radius:10px;display:none;z-index:300;border-left:4px solid var(--orange);box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:320px;line-height:1.4}
+
+/* ── INFO SECTION ── */
+.info-section{background:var(--cream);border:1px solid #F0D89A;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#633806;line-height:1.6}
+.info-section strong{color:var(--navy)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .main{padding:12px}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .modal{width:95vw;padding:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo">R</div>
+    <div>
+      <div class="brand-name">Rexult Talentportal</div>
+      <div class="brand-sub">Talent- & Mini-Tender-Management</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-badge">Prototyp PA9</span>
+    <div class="user-pill">
+      <div class="avatar">CM</div>
+      <span class="user-name">Celine Mey</span>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-item active" onclick="switchView('dashboard',this)">
+    <span>&#9632;</span> Dashboard
+  </div>
+  <div class="nav-item" onclick="switchView('ausschreibungen',this)">
+    <span>&#128196;</span> Ausschreibungen
+  </div>
+  <div class="nav-item" onclick="switchView('talentpool',this)">
+    <span>&#128101;</span> Talentpool
+  </div>
+  <div class="nav-item" onclick="switchView('bewerbungen',this)">
+    <span>&#9993;</span> Bewerbungen
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ── DASHBOARD ── -->
+  <div id="view-dashboard" class="view active">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Übersicht Talentportal Rexult AG – Stand Mai 2026</div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <strong>Prototyp-Hinweis:</strong> Dieser klickbare Prototyp wurde im Rahmen der PA9 (HF Betriebswirtschaft) entwickelt und zeigt, wie das Tool in der Praxis aussehen und funktionieren würde. Für die produktive Einführung wird ein etabliertes Standardtool (<strong>Refline CH</strong> oder Softgarden DACH) empfohlen.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Subis & Partner registriert</div>
+        <div class="stat-val">38</div>
+        <div class="stat-note ok">&#10003; 95% – Ziel ≥ 80% erreicht</div>
+        <div class="progress"><div class="progress-fill" style="width:95%;background:var(--green)"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ø Bearbeitungszeit Mini-Tender</div>
+        <div class="stat-val">0.4T</div>
+        <div class="stat-note ok">&#10003; Ziel ≤ 0.5 Tage erreicht</div>
+        <div class="progress"><div class="progress-fill" style="width:80%;background:var(--green)"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Offene Ausschreibungen</div>
+        <div class="stat-val">3</div>
+        <div class="stat-note warn">&#9679; 12 Bewerbungen eingegangen</div>
+        <div class="progress"><div class="progress-fill" style="width:60%;background:var(--orange)"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ausschreibungen via Kopfwissen</div>
+        <div class="stat-val">0</div>
+        <div class="stat-note ok">&#10003; KPI-Ziel: 0 – erreicht</div>
+        <div class="progress"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Letzte Aktivitäten</div>
+          <div class="card-meta">Echtzeit-Übersicht aller Ereignisse im Talentportal</div>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="act-icon orange">&#128100;</div>
+        <div class="act-text">
+          <strong>Thomas Keller</strong> hat sich für <strong>Projektleiter Digital Transformation (Bund)</strong> beworben und seine Verfügbarkeit angegeben – Referenzen hinterlegt.
+        </div>
+        <div class="act-time">Vor 2h</div>
+      </div>
+      <div class="activity-item">
+        <div class="act-icon navy">&#128276;</div>
+        <div class="act-text">
+          Ausschreibung <strong>Business Analyst E-Government</strong> automatisch an alle 38 registrierten Partner versendet.
+        </div>
+        <div class="act-time">Vor 5h</div>
+      </div>
+      <div class="activity-item">
+        <div class="act-icon green">&#10003;</div>
+        <div class="act-text">
+          <strong>Sandra Müller</strong> für Mandat <strong>Change Manager Digitalisierung</strong> vorgeschlagen – Offerte in Bearbeitung bei Bundesamt.
+        </div>
+        <div class="act-time">Gestern 14:32</div>
+      </div>
+      <div class="activity-item">
+        <div class="act-icon orange">&#128100;</div>
+        <div class="act-text">
+          <strong>Neuer Partner</strong> BK Consulting AG hat sich über Einladungslink registriert und Profil vollständig ausgefüllt.
+        </div>
+        <div class="act-time">Gestern 09:15</div>
+      </div>
+      <div class="activity-item">
+        <div class="act-icon navy">&#128196;</div>
+        <div class="act-text">
+          Ausschreibung <strong>Projektleiter Digital Transformation</strong> erstellt und anonymisiert publiziert – 38 Partner automatisch benachrichtigt.
+        </div>
+        <div class="act-time">19.05.2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AUSSCHREIBUNGEN ── -->
+  <div id="view-ausschreibungen" class="view">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Ausschreibungen</div>
+        <div class="page-sub">Anonymisierte Mini-Tender Ausschreibungen – keine Rahmenvertrags-Details sichtbar</div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-orange" onclick="openModal('modal-ausschreibung')">
+          &#43; Neue Ausschreibung
+        </button>
+      </div>
+    </div>
+
+    <div class="pill-row">
+      <div class="pill active" onclick="filterPill(this)">Alle (3)</div>
+      <div class="pill" onclick="filterPill(this)">Aktiv</div>
+      <div class="pill" onclick="filterPill(this)">Abgeschlossen</div>
+      <div class="pill" onclick="filterPill(this)">Entwurf</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Projektleiter Digital Transformation</div>
+          <div class="card-meta">Erstellt 19.05.2026 &nbsp;·&nbsp; Frist 26.05.2026 &nbsp;·&nbsp; Auftraggeber anonymisiert</div>
+        </div>
+        <span class="badge badge-green">&#9679; Aktiv</span>
+      </div>
+      <div class="card-body">Gesucht wird eine erfahrene Fachperson im Bereich Digital Transformation für ein Projekt in der Bundesverwaltung. Kenntnisse in agilen Methoden sowie Erfahrung mit der öffentlichen Verwaltung sind zwingend erforderlich.</div>
+      <div class="tags">
+        <span class="badge badge-navy">80–100%</span>
+        <span class="badge badge-navy">Bern / Remote</span>
+        <span class="badge badge-navy">6 Monate</span>
+        <span class="badge badge-navy">EK: PMP o.ä.</span>
+        <span class="badge badge-navy">ZK: Ref. Bund</span>
+      </div>
+      <div class="card-footer">
+        <span style="font-size:13px;color:var(--text-s)">&#128101; 5 Bewerbungen eingegangen</span>
+        <div class="actions">
+          <button class="btn btn-sm" onclick="switchView('bewerbungen',document.querySelectorAll('.nav-item')[3])">Bewerbungen ansehen</button>
+          <button class="btn btn-sm btn-ghost" onclick="showToast('Erinnerung an offene Subis versendet!')">Erinnerung senden</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Business Analyst E-Government</div>
+          <div class="card-meta">Erstellt 20.05.2026 &nbsp;·&nbsp; Frist 27.05.2026 &nbsp;·&nbsp; Auftraggeber anonymisiert</div>
+        </div>
+        <span class="badge badge-orange">&#9679; Aktiv · Neu</span>
+      </div>
+      <div class="card-body">Fachperson für Business Analyse in einem E-Government-Projekt. Kenntnisse in IIBA-Methoden und Erfahrung mit Anforderungsmanagement in der Verwaltung erwünscht.</div>
+      <div class="tags">
+        <span class="badge badge-navy">60%</span>
+        <span class="badge badge-navy">Remote / Bern</span>
+        <span class="badge badge-navy">12 Monate</span>
+        <span class="badge badge-navy">EK: IIBA-Zertifikat</span>
+        <span class="badge badge-navy">ZK: Deutsch C2</span>
+      </div>
+      <div class="card-footer">
+        <span style="font-size:13px;color:var(--text-s)">&#128101; 7 Bewerbungen eingegangen</span>
+        <div class="actions">
+          <button class="btn btn-sm" onclick="switchView('bewerbungen',document.querySelectorAll('.nav-item')[3])">Bewerbungen ansehen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="opacity:.65">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Change Manager Digitalisierung</div>
+          <div class="card-meta">Erstellt 10.05.2026 &nbsp;·&nbsp; Abgeschlossen 15.05.2026</div>
+        </div>
+        <span class="badge badge-gray">Abgeschlossen</span>
+      </div>
+      <div class="tags">
+        <span class="badge badge-navy">100%</span>
+        <span class="badge badge-navy">Bern</span>
+        <span class="badge badge-navy">3 Monate</span>
+      </div>
+      <div class="card-footer">
+        <span style="font-size:13px;color:var(--text-s)">3 Bewerbungen &nbsp;·&nbsp; Sandra Müller ausgewählt</span>
+        <span class="badge badge-green">&#10003; Offerte eingereicht</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TALENTPOOL ── -->
+  <div id="view-talentpool" class="view">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Talentpool</div>
+        <div class="page-sub">38 von 40 Subis & externe Partner registriert &nbsp;·&nbsp; 2 Einladungen ausstehend</div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="showToast('Einladungsmail versendet!')">&#9993; Einladen</button>
+        <button class="btn" onclick="showToast('Export als CSV wird vorbereitet...')">&#8659; Export</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" placeholder="Name, Firma oder Skills suchen..." oninput="filterKandidaten(this.value)">
+      <select onchange="filterKandidaten()">
+        <option>Alle Fachgebiete</option>
+        <option>Projektmanagement</option>
+        <option>Business Analyse</option>
+        <option>Change Management</option>
+        <option>IT / Entwicklung</option>
+      </select>
+      <select onchange="filterKandidaten()">
+        <option>Alle Verfügbarkeiten</option>
+        <option>Sofort verfügbar</option>
+        <option>Ab Juni</option>
+        <option>Ab Juli</option>
+        <option>Ab August</option>
+      </select>
+    </div>
+
+    <div id="kandidaten-liste"></div>
+  </div>
+
+  <!-- ── BEWERBUNGEN ── -->
+  <div id="view-bewerbungen" class="view">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Bewerbungen</div>
+        <div class="page-sub">Eingegangene Bewerbungen auf aktive Ausschreibungen – inkl. EK/ZK-Prüfung</div>
+      </div>
+    </div>
+
+    <div class="bew-group">
+      <div class="bew-title">Projektleiter Digital Transformation &nbsp;·&nbsp; 5 Bewerbungen &nbsp;·&nbsp; Frist 26.05.2026</div>
+
+      <div class="bew-item top">
+        <div class="kandidat-avatar">TK</div>
+        <div style="flex:1">
+          <div class="bew-name">Thomas Keller</div>
+          <div class="bew-details">TK Consulting GmbH &nbsp;·&nbsp; PMP zertifiziert &nbsp;·&nbsp; 8 Jahre Erfahrung Bund &nbsp;·&nbsp; Verfügbar: sofort</div>
+          <div class="bew-ek ok">&#10003; EK erfüllt &nbsp;·&nbsp; &#10003; ZK: 3 Referenzprojekte Bund hinterlegt</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-orange btn-sm" onclick="showToast('Thomas Keller wurde kontaktiert!')">Kontaktieren</button>
+          <button class="btn btn-sm" onclick="showToast('Profil von Thomas Keller geöffnet')">Profil</button>
+        </div>
+      </div>
+
+      <div class="bew-item mid">
+        <div class="kandidat-avatar">SM</div>
+        <div style="flex:1">
+          <div class="bew-name">Sandra Müller</div>
+          <div class="bew-details">Selbständig &nbsp;·&nbsp; Prince2 &nbsp;·&nbsp; 5 Jahre Erfahrung &nbsp;·&nbsp; Verfügbar: 01.06.2026</div>
+          <div class="bew-ek warn">&#10003; EK erfüllt &nbsp;·&nbsp; &#9888; ZK: Referenzen noch ausstehend</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-sm" onclick="showToast('Erinnerung an Sandra Müller gesendet!')">Referenzen anfordern</button>
+        </div>
+      </div>
+
+      <div class="bew-item low">
+        <div class="kandidat-avatar">RB</div>
+        <div style="flex:1">
+          <div class="bew-name">Roberto Bianchi</div>
+          <div class="bew-details">RB Solutions &nbsp;·&nbsp; Scrum Master &nbsp;·&nbsp; 3 Jahre &nbsp;·&nbsp; Verfügbar: sofort</div>
+          <div class="bew-ek fail">&#10007; EK nicht erfüllt: PMP-Zertifikat fehlt</div>
+        </div>
+        <span class="badge badge-red">Nicht geeignet</span>
+      </div>
+    </div>
+
+    <div class="bew-group">
+      <div class="bew-title">Business Analyst E-Government &nbsp;·&nbsp; 7 Bewerbungen &nbsp;·&nbsp; Frist 27.05.2026</div>
+
+      <div class="bew-item top">
+        <div class="kandidat-avatar">AW</div>
+        <div style="flex:1">
+          <div class="bew-name">Anna Weber</div>
+          <div class="bew-details">AW Beratung AG &nbsp;·&nbsp; IIBA CBAP &nbsp;·&nbsp; 6 Jahre &nbsp;·&nbsp; Verfügbar: sofort</div>
+          <div class="bew-ek ok">&#10003; EK erfüllt &nbsp;·&nbsp; &#10003; ZK: Deutsch C2 &amp; 2 Referenzprojekte hinterlegt</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-orange btn-sm" onclick="showToast('Anna Weber wurde kontaktiert!')">Kontaktieren</button>
+        </div>
+      </div>
+
+      <div class="bew-item mid">
+        <div class="kandidat-avatar">PF</div>
+        <div style="flex:1">
+          <div class="bew-name">Peter Frei</div>
+          <div class="bew-details">Frei Consulting &nbsp;·&nbsp; HERMES &nbsp;·&nbsp; 4 Jahre &nbsp;·&nbsp; Verfügbar: ab Juli</div>
+          <div class="bew-ek warn">&#10003; EK erfüllt &nbsp;·&nbsp; &#9888; Verfügbarkeit erst ab Juli</div>
+        </div>
+        <button class="btn btn-sm" onclick="showToast('Verfügbarkeit mit Peter Frei besprochen')">Verfügbarkeit klären</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── MODAL NEUE AUSSCHREIBUNG ── -->
+<div class="modal-bg" id="modal-ausschreibung" onclick="if(event.target===this)closeModal('modal-ausschreibung')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Neue anonymisierte Ausschreibung</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-ausschreibung')">&#10005;</button>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">Titel (generisch – ohne Auftraggeber/Bundesamt)</div>
+      <input class="form-input" placeholder="z.B. Projektleiter Digital Transformation">
+    </div>
+    <div class="form-group">
+      <div class="form-label">Beschreibung (anonymisiert)</div>
+      <textarea class="form-input" rows="3" placeholder="Aufgaben und Anforderungen beschreiben – ohne vertrauliche Details"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">Pensum</div>
+        <select class="form-input">
+          <option>80–100%</option><option>60–80%</option><option>40–60%</option><option>20–40%</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Einsatzdauer</div>
+        <select class="form-input">
+          <option>3 Monate</option><option>6 Monate</option><option>12 Monate</option><option>Unbefristet</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Eignungskriterien (EK) – zwingend</div>
+      <input class="form-input" placeholder="z.B. PMP zertifiziert, 5 Jahre Erfahrung öffentl. Verwaltung">
+    </div>
+    <div class="form-group">
+      <div class="form-label">Zuschlagskriterien (ZK) – bewertet</div>
+      <input class="form-input" placeholder="z.B. Referenzprojekte Bund, Deutsch C2, HERMES-Kenntnisse">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">Einsatzort</div>
+        <input class="form-input" placeholder="z.B. Bern / Remote">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Bewerbungsfrist</div>
+        <input class="form-input" type="date">
+      </div>
+    </div>
+
+    <div class="info-box">
+      &#128274; <strong>Datenschutz gewährleistet:</strong> Die Ausschreibung wird anonymisiert publiziert – Auftraggeber, Rahmenvertrags-Details und vertrauliche Projektinfos sind für externe Kandidaten nicht sichtbar. Alle 38 registrierten Partner werden automatisch per E-Mail benachrichtigt.
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-ausschreibung')">Abbrechen</button>
+      <button class="btn btn-ghost" onclick="showToast('Entwurf gespeichert!')">Als Entwurf speichern</button>
+      <button class="btn btn-orange" onclick="closeModal('modal-ausschreibung');showToast('&#10003; Ausschreibung publiziert – 38 Partner automatisch benachrichtigt!')">
+        Publizieren &amp; versenden
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+const kandidaten = [
+  {init:'TK',name:'Thomas Keller',firma:'TK Consulting GmbH',skills:'Projektmanagement · PMP · Prince2 · HERMES',verf:'Sofort',ref:true,refText:'Referenzen hinterlegt'},
+  {init:'SM',name:'Sandra Müller',firma:'Selbständig',skills:'Change Management · PROSCI · Leadership',verf:'Ab 01.06.',ref:true,refText:'Referenzen hinterlegt'},
+  {init:'AW',name:'Anna Weber',firma:'AW Beratung AG',skills:'Business Analyse · IIBA CBAP · Requirements Engineering',verf:'Sofort',ref:true,refText:'Referenzen hinterlegt'},
+  {init:'RB',name:'Roberto Bianchi',firma:'RB Solutions',skills:'Scrum · Agile Coaching · Kanban',verf:'Sofort',ref:false,refText:'Referenzen ausstehend'},
+  {init:'PF',name:'Peter Frei',firma:'Frei Consulting',skills:'Projektmanagement · HERMES · Stakeholder Mgmt',verf:'Ab Juli',ref:true,refText:'Referenzen hinterlegt'},
+  {init:'LM',name:'Luisa Meier',firma:'LM Beratung',skills:'IT-Projektleitung · SAFe · DevOps',verf:'Ab August',ref:true,refText:'Referenzen hinterlegt'},
+  {init:'BK',name:'Beat Kuster',firma:'BK Consulting AG',skills:'Strategieberatung · Organisationsentwicklung',verf:'Sofort',ref:false,refText:'Referenzen ausstehend'},
+];
+
+function renderKandidaten(list) {
+  const c = document.getElementById('kandidaten-liste');
+  if (!list.length) { c.innerHTML = '<div class="card" style="text-align:center;color:var(--text-s);padding:32px">Keine Kandidaten gefunden.</div>'; return; }
+  c.innerHTML = list.map(k => `
+    <div class="kandidat-card">
+      <div class="kandidat-avatar">${k.init}</div>
+      <div class="kandidat-info">
+        <div class="kandidat-name">${k.name}</div>
+        <div class="kandidat-sub">${k.firma}</div>
+        <div class="kandidat-skills">${k.skills}</div>
+      </div>
+      <div class="kandidat-right">
+        <span class="badge ${k.verf==='Sofort'?'badge-green':k.verf.includes('Juni')?'badge-orange':'badge-gray'}">${k.verf}</span>
+        <div class="kandidat-ref" style="color:${k.ref?'var(--green)':'var(--orange-d)'}">
+          ${k.ref?'&#10003;':'&#9888;'} ${k.refText}
+        </div>
+      </div>
+      <div class="actions" style="margin-left:8px">
+        <button class="btn btn-sm" onclick="showToast('Profil von ${k.name} geöffnet')">Profil</button>
+      </div>
+    </div>
+  `).join('');
+}
+renderKandidaten(kandidaten);
+
+function filterKandidaten(query) {
+  const q = (query || document.querySelector('.filter-bar input').value || '').toLowerCase();
+  const filtered = q ? kandidaten.filter(k =>
+    k.name.toLowerCase().includes(q) ||
+    k.firma.toLowerCase().includes(q) ||
+    k.skills.toLowerCase().includes(q)
+  ) : kandidaten;
+  renderKandidaten(filtered);
+}
+
+function switchView(id, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function filterPill(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.style.display='none', 3500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-bg.open').forEach(m => m.classList.remove('open'));
+});
+</script>
+</body>
+</html>
