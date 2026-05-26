@@ -1,0 +1,156 @@
+
+<style>
+.req-section { margin-bottom: 1.25rem; }
+.req-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.req-badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: var(--border-radius-md); }
+.req-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; }
+.req-prio { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: var(--border-radius-md); white-space: nowrap; margin-top: 1px; flex-shrink: 0; }
+.req-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+.req-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.must { background: #FCEBEB; color: #A32D2D; }
+.should { background: #FAEEDA; color: #854F0B; }
+.nice { background: #EAF3DE; color: #3B6D11; }
+.nope { background: #F1EFE8; color: #5F5E5A; }
+.sec-badge-ds { background: #EEEDFE; color: #3C3489; }
+.sec-badge-func { background: #E1F5EE; color: #085041; }
+.sec-badge-wirt { background: #FAEEDA; color: #633806; }
+</style>
+
+<h2 class="sr-only">Anforderungskatalog für externes Talent- und Mini-Tender-Tool v2</h2>
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding-top:0.5rem;margin-bottom:1.25rem;">
+  <div>
+    <p style="font-size:16px;font-weight:500;margin:0;color:var(--color-text-primary);">Anforderungskatalog – externes Tool</p>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin:4px 0 0;">Mini-Tender Talentmanagement · 3 Kategorien · Priorisiert</p>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+    <span class="req-prio must">Must-have</span>
+    <span class="req-prio should">Should-have</span>
+    <span class="req-prio nice">Nice-to-have</span>
+    <span class="req-prio nope">Ausgeschlossen</span>
+  </div>
+</div>
+
+<!-- Datenschutz & Compliance -->
+<div class="req-section">
+  <div class="req-header">
+    <i class="ti ti-lock" style="font-size:16px;color:var(--color-text-secondary);" aria-hidden="true"></i>
+    <span class="req-badge sec-badge-ds">Datenschutz &amp; Compliance</span>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Anonymisierte Ausschreibung</div>
+      <div class="req-sub">Rahmenvertrags-Inhalte dürfen nicht direkt publiziert werden – das Tool muss als neutrale Stellenausschreibung formulieren können</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">DSGVO / DSG-konform (Schweiz)</div>
+      <div class="req-sub">Datenhaltung in der Schweiz oder EU; keine Weitergabe von Kandidatendaten an Dritte</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Rollenbasierter Zugriff</div>
+      <div class="req-sub">Subis / externe Partner sehen nur ihre eigenen Daten; keine Einsicht in andere Kandidaten oder Subis (Datenschutz untereinander)</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio should">Should</span>
+    <div>
+      <div class="req-text">Audit-Trail / Nachvollziehbarkeit</div>
+      <div class="req-sub">Wer hat sich wann auf welche Ausschreibung gemeldet – für interne Dokumentation</div>
+    </div>
+  </div>
+</div>
+
+<!-- Funktionalität -->
+<div class="req-section">
+  <div class="req-header">
+    <i class="ti ti-settings" style="font-size:16px;color:var(--color-text-secondary);" aria-hidden="true"></i>
+    <span class="req-badge sec-badge-func">Funktionalität</span>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Webbasierte Ausschreibungsplattform</div>
+      <div class="req-sub">Externe können sich selbstständig auf Ausschreibungen bewerben – kein manueller E-Mail-Prozess mehr</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Talentpool / Kandidatenverwaltung</div>
+      <div class="req-sub">Subis, externe Partner (~40) und ehemalige Bewerber können sich registrieren und ihr Profil pflegen</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Automatisierte Benachrichtigung</div>
+      <div class="req-sub">Bei neuer passender Ausschreibung erhalten registrierte Kandidaten automatisch eine Benachrichtigung</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio should">Should</span>
+    <div>
+      <div class="req-text">Suchfunktion &amp; Filterung</div>
+      <div class="req-sub">Interne können Kandidaten nach Skills, Verfügbarkeit, Erfahrung filtern – ersetzt die SharePoint-Suche</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio should">Should</span>
+    <div>
+      <div class="req-text">Verfügbarkeitsabfrage integriert</div>
+      <div class="req-sub">Kandidaten können direkt im Tool ihre Verfügbarkeit angeben – kein separates manuelles Nachfragen</div>
+    </div>
+  </div>
+  <div class="req-card" style="opacity:0.6;">
+    <span class="req-prio nope">Ausgeschl.</span>
+    <div>
+      <div class="req-text">Integration bestehende Auftragsbörse (MS Teams)</div>
+      <div class="req-sub">Nicht umsetzbar: Die interne Auftragsbörse läuft in Microsoft Teams und zeigt alle Rexult-Aufträge für alle internen MA. Externe dürfen darauf keinen Zugriff haben – eine Anbindung würde den Datenschutz verletzen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Wirtschaftlichkeit & Technik -->
+<div class="req-section">
+  <div class="req-header">
+    <i class="ti ti-chart-bar" style="font-size:16px;color:var(--color-text-secondary);" aria-hidden="true"></i>
+    <span class="req-badge sec-badge-wirt">Wirtschaftlichkeit &amp; Technik</span>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Kostengünstige Lösung</div>
+      <div class="req-sub">KMU-tauglich; kein teures Enterprise-Tool – Celine hat explizit ein kostengünstiges externes Tool als Anforderung genannt</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio must">Must</span>
+    <div>
+      <div class="req-text">Einfache Bedienbarkeit</div>
+      <div class="req-sub">Kein IT-Aufwand für Onboarding; externe Partner müssen sich ohne Schulung zurechtfinden</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio should">Should</span>
+    <div>
+      <div class="req-text">Kein Vollzugang für alle Subis</div>
+      <div class="req-sub">Subis in ähnlichen Rahmenverträgen dürfen keine Konkurrenz-Kandidaten sehen</div>
+    </div>
+  </div>
+  <div class="req-card">
+    <span class="req-prio nice">Nice</span>
+    <div>
+      <div class="req-text">Vertec-Kompatibilität oder Export</div>
+      <div class="req-sub">Daten könnten idealerweise ins bestehende Vertec übertragen werden – aktuell technisch nicht möglich</div>
+    </div>
+  </div>
+</div>
+
+<button onclick="sendPrompt('Kannst du nun 2-3 konkrete Tools evaluieren die diese Anforderungen erfüllen?')" style="margin-top:0.5rem;font-size:13px;padding:8px 16px;cursor:pointer;">Tool-Evaluation starten ↗</button>
